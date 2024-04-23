@@ -1,0 +1,38 @@
+{% extends "site_app/global/base.html" %}
+
+{% block content %}
+<div class="container mt-3" style="max-width: 600px;">
+    <div class="card">
+        <div class="card-header bg-primary">
+            <p class="h3 text-white text-center">Criar Candidato</p>
+        </div>
+        <form action="{% url 'criar' %}" method="post">
+            <div class="card-body form-group text-start">
+                {% csrf_token %}
+                <label for="name">Nome:</label>
+                <input class="form-control mb-3" id="name" type="text" name="nome" placeholder="Nome completo" />
+                <label for="email">Endereço de email</label>
+                <input class="form-control mb-3" id="email" type="text" name="email"
+                    placeholder="example@example.com" />
+            </div>
+            <div class="mx-3 mb-3 d-grid">
+                <button class="btn btn-success btn-block" type="submit">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if nome %}
+    <div class="container mt-3" style="max-width: 600px;">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <p class="h3 text-white text-center">Candidato inserido com sucesso!</p>
+            </div>
+            <div class="card-body form-group text-start">
+                <p>Nome: {{nome}}</p>
+                <p>Email: {{email}}</p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock content %}

@@ -1,13 +1,23 @@
 from django.urls import path
-from .views import home, produtos, precos, deletar, atualizar
+from . import views
 
 urlpatterns = [
-    path('', home, name="home"),
+    path('', views.home, name="home"),
 
-    path('deletar/<int:id>', deletar, name="deletar"),
-    path('atualizar/<int:id>', atualizar, name="atualizar"),
+    path('pesquisar/', views.pesquisar, name="pesquisar"),
 
-    path('produtos/', produtos),
-    path('precos/', precos),
-    path('precos/<int:id>', precos),
+    path('criar/', views.criar, name="criar"),
+
+
+    path('deletar/<int:id>', views.deletar, name="deletar_id"),
+    path('deletar/', views.deletar, name="deletar"),
+
+    path('atualizar/<int:id>', views.atualizar, name="atualizar_id"),
+    path('atualizar/', views.atualizar, name="atualizar"),
+
+
+    #excluir depois
+    path('produtos/', views.produtos),
+    path('precos/', views.precos),
+    path('precos/<int:id>', views.precos),
 ]

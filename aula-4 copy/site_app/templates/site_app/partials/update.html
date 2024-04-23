@@ -1,0 +1,24 @@
+{% extends "site_app/global/base.html" %}
+
+{% block content %}
+<div class="container mt-3" style="max-width: 600px;">
+    <div class="card">
+        <div class="card-header bg-primary">
+            <p class="h3 text-white text-center">Atualizar Candidato</p>
+        </div>
+        <form action="{% url 'atualizar_id' pessoa.id %}" method="POST">
+            <div class="card-body form-group text-start">
+                {% csrf_token %}
+                <label for="name">Nome:</label>
+                <input class="form-control mb-3" id="name" type="text" name="nome" value="{{pessoa.nome}}" placeholder="Nome completo" />
+                <label for="email">Endereço de email</label>
+                <input class="form-control mb-3" id="email" type="text" name="email" value="{{pessoa.email}}"
+                    placeholder="example@example.com" />
+            </div>
+            <div class="mx-3 mb-3 d-grid">
+                <button class="btn btn-primary btn-block" type="submit">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

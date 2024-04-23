@@ -1,48 +1,96 @@
 from django.shortcuts import render, redirect
+
+from site_app.models import Pessoa
 dados = []
 
 # Create your views here.
 def home(request):
-    global dados
     nome = ""
     email = ""
+    idade = 0
+    dados = Pessoa.objects.all().order_by('-id')[:10] 
 
     if request.POST:
         nome = request.POST.get("nome")
         email = request.POST.get("email")
-        dados.append({"nome":nome,
-                    "email":email})
-        
-    for i,row in enumerate(dados):
-        row["id"] = i
+        idade = request.POST.get("idade",0)
+        Pessoa.objects.create(nome=nome,email=email,idade=idade)
         
     return render(request, "site_app/global/home.html", context={"dados":dados,"nome":nome,"email":email})
 
+def criar(request):
+    nome = ""
+    email = ""
+    idade = 0
 
-def deletar(request,id):
-    global dados
-    dados.pop(id)
-    return redirect(home)
-
-def atualizar(request,id):
-    global dados
-    
     if request.POST:
-        r = dados.pop(id)
-        print(r)
         nome = request.POST.get("nome")
         email = request.POST.get("email")
-        dados.insert(id,{"nome":nome,
-                    "email":email})
+        idade = request.POST.get("idade",0)
+        Pessoa.objects.create(nome=nome,email=email,idade=idade)
+        
+    return render(request, "site_app/partials/criar.html", context={"nome":nome,"email":email,"idade":idade})
 
-        return redirect(home)
+
+
+def pesquisar(request):
+    pessoa = {}
+    nome_filter = request.GET.get("nome")
+    if nome_filter:
+        pessoa["pessoas"] = Pessoa.objects.filter(nome__icontains=nome_filter)
+    else:
+        pessoa["pessoas"] = Pessoa.objects.all()
+
+    return render(request, "site_app/partials/pesquisar.html",pessoa)
+
+def deletar(request,id=0):
+    pessoa = {}
+
+    if id:
+        pessoa = Pessoa.objects.get(id=id)
+        pessoa.delete()
+        return redirect(deletar)
     
-    nome = dados[id].get("nome")
-    email = dados[id].get("email")
-    return render(request, "site_app/global/atualizar.html", context={"id":id, "nome":nome,"email":email})
+    nome_filter = request.GET.get("nome")
+    if nome_filter:
+        pessoa["pessoas"] = Pessoa.objects.filter(nome__icontains=nome_filter)
+    else:
+        pessoa["pessoas"] = Pessoa.objects.all()
+    return render(request, "site_app/partials/deletar.html", context=pessoa)
+
+def atualizar(request,id=0):
+    pessoa = {}
+    if id:   
+        if request.POST:
+            pessoa = Pessoa.objects.get(id=id)
+            pessoa.nome = request.POST.get("nome",pessoa.nome)
+            pessoa.email = request.POST.get("email",pessoa.email)
+            pessoa.idade = request.POST.get("idade",pessoa.idade)
+
+            pessoa.save()
+
+            return redirect(atualizar)
+        
+        pessoa["pessoa"] = Pessoa.objects.get(id=id)
+        return render(request, "site_app/partials/update.html",pessoa)
+    
+    nome_filter = request.GET.get("nome")
+    if nome_filter:
+        pessoa["pessoas"] = Pessoa.objects.filter(nome__icontains=nome_filter)
+    else:
+        pessoa["pessoas"] = Pessoa.objects.all()
+
+    return render(request, "site_app/partials/atualizar.html", context=pessoa)
 
 
 
+
+
+
+
+
+
+### Excluir
 def produtos(request):
     return render(request, "site_app/global/produtos.html")
 

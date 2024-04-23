@@ -1,0 +1,28 @@
+{% extends "site_app/global/base.html" %}
+
+{% block content %}
+<div class="container-fluid mt-3">
+    <div class="container mt-3" style="max-width: 600px;">
+        <form action="{% url 'atualizar' %}" method="GET" class="row">
+            {% csrf_token %}
+            <div class="col">
+                <input class="form-control" type="text" name="nome" placeholder="Nome" />
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-info" type="submit">Pesquisar</button>
+            </div>
+        </form>
+    </div>
+    {% if dados %}
+        {% include "site_app/partials/table.html" with pessoas=dados name_url="atualizar_id" label="Atualizar" style="primary" %}
+    {% else %}
+        <div class="container mt-3">
+            <p class="h3 text-center">Dados não encontrados</p>
+        </div>
+    {% endif %}
+    
+
+    
+</div>
+{% endblock content %}
+
